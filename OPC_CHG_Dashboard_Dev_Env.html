@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OPC | CHG Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f4f6f9;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-nav {
+      background-color: #12239e;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      gap: 60px;
+    }
+
+    .top-nav img {
+      height: 45px;
+    }
+
+    .nav-buttons button {
+      background-color: #1565c0;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .nav-buttons button:hover {
+      background-color: #1976d2;
+    }
+
+    .nav-buttons button.active {
+      background-color: white !important;
+      color: black !important;
+      font-weight: bold;
+    }
+
+    .nav-logos {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-client {
+      height: 45px;
+      object-fit: contain;
+    }
+
+    .iframe-wrapper {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .iframe-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .fullscreen-toggle {
+      position: absolute;
+      bottom: 0;
+      left: 950px;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: none;
+      border-radius: 0 4px 0 0;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 18px;
+      z-index: 9999;
+    }
+
+    .fullscreen-toggle:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .nav-about {
+      display: none;
+    }
+
+    .nav-buttons {
+      background-color: #12239e;
+      padding: 15px;
+      display: flex;
+      justify-content: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .report-container {
+      flex: 1;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <div class="nav-logos">
+      <img src="https://www.opc.co.in/images/logo.jpg" alt="OPC Logo" class="nav-client" />
+    </div>  
+
+    <div class="nav-buttons">
+      <button onclick="showReportInPage('https://app.powerbi.com/reportEmbed?reportId=9489bc2b-3a08-434b-9099-326e7e7fe727&autoAuth=true&ctid=3cda4921-d376-43af-9c81-f6dfc2733f97',event)">Primary Business</button>
+      <button onclick="showReportInPage('https://app.powerbi.com/reportEmbed?reportId=d381df97-89a9-412b-b655-938ca96e19da&autoAuth=true&ctid=3cda4921-d376-43af-9c81-f6dfc2733f97',event)">Secondary Business</button>
+      <button onclick="showReportInPage('https://app.powerbi.com/reportEmbed?reportId=388408d7-b9ae-43b5-acb2-5f034d117f0e&autoAuth=true&ctid=3cda4921-d376-43af-9c81-f6dfc2733f97',event)">Management Reporting</button>
+      <button onclick="showReportInPage('https://app.powerbi.com/reportEmbed?reportId=71eda9ea-af29-436f-93c8-0c0e9d5377d4&autoAuth=true&ctid=3cda4921-d376-43af-9c81-f6dfc2733f97',event)">Funding</button>
+      <button onclick="showReportInPage('https://app.powerbi.com/reportEmbed?reportId=99984408-f908-455e-a0af-55641353c06b&autoAuth=true&ctid=3cda4921-d376-43af-9c81-f6dfc2733f97',event)">Financials</button>
+      <button onclick="showReportInPage('https://app.powerbi.com/reportEmbed?reportId=ae7d1c49-da1a-4ce3-80b7-4a0c327b8528&autoAuth=true&ctid=3cda4921-d376-43af-9c81-f6dfc2733f97',event)">Competition</button>
+    </div>
+    <a class="nav-about" href="https://stakeinsights.ai/about-us" target="_blank">About Us</a>
+  </div>
+
+  <div class="report-container">
+    <div class="iframe-wrapper" id="iframeWrapper">
+      <iframe id="reportFrame" allowfullscreen></iframe>
+      <button class="fullscreen-toggle" id="fullscreenBtn" onclick="toggleFullScreen()">⛶</button>
+    </div>
+  </div>
+
+  <script>
+    function showReportInPage(url, eventOrButton) {
+      const iframe = document.getElementById('reportFrame');
+
+      document.querySelectorAll('.nav-buttons button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      iframe.onload = () => {
+        if (eventOrButton) {
+          if (eventOrButton.target) {
+            eventOrButton.target.classList.add('active');
+          } else {
+            eventOrButton.classList.add('active');
+          }
+        }
+      };
+
+      iframe.src = url;
+    }
+
+    function toggleFullScreen() {
+      const wrapper = document.getElementById("iframeWrapper");
+      const btn = document.getElementById("fullscreenBtn");
+
+      if (!document.fullscreenElement) {
+        wrapper.requestFullscreen().catch(err => {
+          console.log(`Error attempting fullscreen: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen().catch(err => {
+          console.log(`Error exiting fullscreen: ${err.message}`);
+        });
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const defaultButton = document.querySelector('.nav-buttons button'); 
+      if (defaultButton) {
+        showReportInPage(
+          'https://app.powerbi.com/reportEmbed?reportId=9489bc2b-3a08-434b-9099-326e7e7fe727&autoAuth=true&ctid=3cda4921-d376-43af-9c81-f6dfc2733f97',
+          defaultButton
+        );
+      }
+    });
+  </script>
+</body>
+</html>
